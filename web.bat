@@ -1,0 +1,1 @@
+"bin/web.exe" -port=80 %*

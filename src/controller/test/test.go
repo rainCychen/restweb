@@ -25,8 +25,9 @@ func (w *Web) InitRoute(Container *restful.Container) {
 	ws.Route(ws.GET("/login").To(w.handleForm))
 	ws.Route(ws.POST("/login").Consumes("application/x-www-form-urlencoded").To(w.handleLogin))
 	ws.Route(ws.GET("/user").To(w.handleForm))
-	ws.Route(ws.POST("/login").Consumes("application/x-www-form-urlencoded").To(w.handleUser))
+	ws.Route(ws.POST("/user").Consumes("application/x-www-form-urlencoded").To(w.handleUser))
 	Container.Add(ws)
+
 }
 
 type Info struct {
@@ -61,7 +62,6 @@ func (w *Web) handleIndex(req *restful.Request, rsp *restful.Response) {
 }
 func (w *Web) handleLogin(req *restful.Request, rsp *restful.Response) {
 	err := req.Request.ParseForm()
-	//	p, err := url.QueryUnescape(req.URL.RawQuery)
 	if err != nil {
 		rsp.WriteErrorString(http.StatusBadRequest, err.Error())
 		return
@@ -69,34 +69,20 @@ func (w *Web) handleLogin(req *restful.Request, rsp *restful.Response) {
 	p := new(Profile)
 	p.Name = req.Request.PostFormValue("Name")
 	p.Age, err = strconv.Atoi(req.Request.PostFormValue("Age"))
-	//	err = json.Unmarshal(req.Request.PostForm.([]byte), &p)
-	//	err = decoder.Decode(p, req.Request.PostForm)
 	if err != nil {
 		rsp.WriteErrorString(http.StatusBadRequest, err.Error())
 		return
 	}
-	//	fmt.Printf("%T(%[1]v)\n", req.Request.PostFormValue("Name"))
-	//	rsp.WriteEntity(req.Request.PostFormValue("Age"))
 	io.WriteString(rsp.ResponseWriter, fmt.Sprintf("<html><body>Name=%s, Age=%d</body></html>", p.Name, p.Age))
 }
 func (w *Web) handleUser(req *restful.Request, rsp *restful.Response) {
-	p, err := url.QueryUnescape(url.URL.RawQuery)
+	p, err := url.QueryUnescape(req.Request.URL.RawQuery)
 	if err != nil {
 		rsp.WriteErrorString(http.StatusBadRequest, err.Error())
 		return
 	}
-	p := new(Profile)
-	p.Name = req.Request.PostFormValue("Name")
-	p.Age, err = strconv.Atoi(req.Request.PostFormValue("Age"))
-	//	err = json.Unmarshal(req.Request.PostForm.([]byte), &p)
-	//	err = decoder.Decode(p, req.Request.PostForm)
-	if err != nil {
-		rsp.WriteErrorString(http.StatusBadRequest, err.Error())
-		return
-	}
-	//	fmt.Printf("%T(%[1]v)\n", req.Request.PostFormValue("Name"))
-	//	rsp.WriteEntity(req.Request.PostFormValue("Age"))
-	io.WriteString(rsp.ResponseWriter, fmt.Sprintf("<html><body>Name=%s, Age=%d</body></html>", p.Name, p.Age))
+	fmt.Printf("%T(%[1]v)", p)
+	io.WriteString(rsp, p)
 }
 func (w *Web) handleForm(req *restful.Request, rsp *restful.Response) {
 	io.WriteString(rsp,

@@ -26,6 +26,8 @@ func (c *Controller) StartUp() error {
 	restful.PrettyPrintResponses = false
 	web := &test.Web{}
 	web.InitRoute(c.container)
+	p := &test.ProductResource{}
+	p.InitRoute(c.container)
 	svr := http.Server{Handler: c.container, Addr: net.JoinHostPort("0.0.0.0", strconv.Itoa(c.cfg.Port))}
 	return svr.ListenAndServe()
 }

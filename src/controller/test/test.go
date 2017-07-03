@@ -137,11 +137,19 @@ func (w *Web) handleUserForm(req *restful.Request, rsp *restful.Response) {
 获取表单get中的数据
 */
 func (w *Web) handleUser(req *restful.Request, rsp *restful.Response) {
-	p, err := url.QueryUnescape(req.Request.URL.RawQuery)
+	id, err := url.QueryUnescape(req.Request.URL.RawQuery)
 	if err != nil {
 		rsp.WriteErrorString(http.StatusBadRequest, err.Error())
 		return
 	}
-	fmt.Printf("%T(%[1]v)", p)
-	io.WriteString(rsp, fmt.Sprintf("GET:%T(%[1]v)", p))
+	err = req.Request.ParseForm()
+	if err != nil {
+		rsp.WriteErrorString(http.StatusBadRequest, err.Error())
+		return
+	}
+	p := new(Profile)
+	p.Name = req.QueryParameter("Name")
+	p.Age, err = strconv.Atoi(req.QueryParameter("Age"))
+	fmt.Printf("%T(%[1]v)", id)
+	io.WriteString(rsp, fmt.Sprintf("GET:%T(%[1]v)Name%vAge%v", id, p.Name, p.Age))
 }

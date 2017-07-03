@@ -1,30 +1,39 @@
 package test
 
 import (
-	//"html/template"
+	"html/template"
+
 	"github.com/emicklei/go-restful"
 	//"github.com/golang/glog"
 	//"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
+	//	"text/template"
 )
 
 type Web struct{}
 
+var StaicHtml string
+
+func New(route string) {
+	StaicHtml = route
+}
 func (w *Web) InitRoute(Container *restful.Container) {
 	ws := new(restful.WebService)
 	ws.Path("/v1")
-	ws.Produces(restful.MIME_JSON)
-	ws.Consumes(restful.MIME_JSON)
+	//	ws.Produces(restful.MIME_JSON)
+	//	ws.Consumes(restful.MIME_JSON)
 	ws.Route(ws.GET("/").To(w.handleTest))
 	ws.Route(ws.GET("/index").To(w.handleIndex))
 	ws.Route(ws.GET("/login").To(w.handleForm))
 	ws.Route(ws.POST("/login").Consumes("application/x-www-form-urlencoded").To(w.handleLogin))
 	ws.Route(ws.GET("/user").To(w.handleForm))
 	ws.Route(ws.POST("/user").Consumes("application/x-www-form-urlencoded").To(w.handleUser))
+	ws.Route(ws.GET("/html").To(w.handleHtml))
 	Container.Add(ws)
 
 }
@@ -97,4 +106,16 @@ func (w *Web) handleForm(req *restful.Request, rsp *restful.Response) {
 		</form>
 		</body>
 		</html>`)
+}
+
+/*
+使用模版
+*/
+
+func (w *Web) handleHtml(req *restful.Request, rsp *restful.Response) {
+	t, err := template.ParseFiles(StaicHtml + "hello.html")
+	if err != nil {
+		log.Fatalf("Template gave: %s", err)
+	}
+	t.Execute(rsp.ResponseWriter, nil)
 }

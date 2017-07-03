@@ -1,1 +1,1 @@
-"bin/web.exe" -port=80 %*
+"bin/web.exe" -port=8080 %*

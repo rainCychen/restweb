@@ -17,7 +17,6 @@ type Web struct{}
 func (w *Web) InitRoute(Container *restful.Container) {
 	ws := new(restful.WebService)
 	ws.Path("/v1")
-	ws.ApiVersion("v1")
 	ws.Produces(restful.MIME_JSON)
 	ws.Consumes(restful.MIME_JSON)
 	ws.Route(ws.GET("/").To(w.handleTest))

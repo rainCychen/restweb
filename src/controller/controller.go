@@ -14,20 +14,20 @@ type Config struct {
 	DbName string
 }
 type Controller struct {
-	cfg       Config
-	container *restful.Container
+	Cfg       Config
+	Container *restful.Container
 }
 
 func New(f Config) *Controller {
-	return &Controller{cfg: f}
+	return &Controller{Cfg: f}
 }
 func (c *Controller) StartUp() error {
-	c.container = restful.NewContainer()
+	c.Container = restful.NewContainer()
 	restful.PrettyPrintResponses = false
 	web := &test.Web{}
-	web.InitRoute(c.container)
+	web.InitRoute(c.Container)
 	p := &test.ProductResource{}
-	p.InitRoute(c.container)
-	svr := http.Server{Handler: c.container, Addr: net.JoinHostPort("0.0.0.0", strconv.Itoa(c.cfg.Port))}
+	p.InitRoute(c.Container)
+	svr := http.Server{Handler: c.Container, Addr: net.JoinHostPort("0.0.0.0", strconv.Itoa(c.Cfg.Port))}
 	return svr.ListenAndServe()
 }

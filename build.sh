@@ -8,6 +8,6 @@ echo $GOPATH
 echo $MQ_PATH
 echo $CUR_PATH
 cd $MQ_PATH
-
+go install $* ./src/cmd/web
 set GOPATH = $OLD_GOPATH 
 cd $CUR_PATH

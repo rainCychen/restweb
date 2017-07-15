@@ -1,10 +1,12 @@
 #!/bin/bash
 MQ_PATH=$(cd "$(dirname "$0")"; pwd)	
 CUR_PATH=`pwd`
-DEPS_PATH='/root/go-pkg'
+DEPS_PATH='/home/Golang/'
 OLD_GOPATH=$GOPATH
 export GOPATH=$DEPS_PATH':'$MQ_PATH
 echo $GOPATH
+echo $MQ_PATH
+echo $CUR_PATH
 cd $MQ_PATH
 
 set GOPATH = $OLD_GOPATH 

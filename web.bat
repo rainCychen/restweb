@@ -1,1 +1,1 @@
-"bin/web.exe" -port=8080 %*
+"bin/web.exe" -port=8080 -logtostderr=true %*

@@ -11,8 +11,11 @@ import (
 )
 
 var (
-	port   = flag.Int("port", 8800, "port")
-	dbName = flag.String("db_name", "yun_wx2", "")
+	port     = flag.Int("port", 8800, "port")
+	dbName   = flag.String("db_name", "yun_wx2", "")
+	RedisSvr = flag.String("qrsvr", "127.0.0.1:6379", "redis queue svr addr")
+	RedisPwd = flag.String("qrpwd", "", "redis queue pwd ")
+	RedisDb  = flag.Int("qrdb", 0, "redis queue db ")
 )
 
 func main() {
@@ -24,8 +27,11 @@ func main() {
 		}
 	}()
 	config := controller.Config{
-		Port:   *port,
-		DbName: *dbName,
+		Port:     *port,
+		DbName:   *dbName,
+		RedisSvr: *RedisSvr,
+		RedisPwd: *RedisPwd,
+		RedisDb:  *RedisDb,
 	}
 	c := controller.New(config)
 	err := c.StartUp()

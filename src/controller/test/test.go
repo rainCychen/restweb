@@ -4,7 +4,7 @@ import (
 	"html/template"
 
 	"github.com/emicklei/go-restful"
-	//"github.com/golang/glog"
+	"github.com/golang/glog"
 	//"encoding/json"
 	"fmt"
 	"io"
@@ -13,14 +13,20 @@ import (
 	"net/url"
 	"strconv"
 	//	"text/template"
+	"github.com/garyburd/redigo/redis"
 )
 
-type Web struct{}
+type Web struct {
+	redisPool *redis.Pool
+	StaicHtml string
+}
 
-var StaicHtml string
+func New(route string, redisPool *redis.Pool) *Web {
+	return &Web{
+		redisPool: redisPool,
+		StaicHtml: route,
+	}
 
-func New(route string) {
-	StaicHtml = route
 }
 func (w *Web) InitRoute(Container *restful.Container) {
 	ws := new(restful.WebService)
@@ -34,6 +40,7 @@ func (w *Web) InitRoute(Container *restful.Container) {
 	ws.Route(ws.GET("/user").To(w.handleUserForm))
 	ws.Route(ws.POST("/user").Consumes("application/x-www-form-urlencoded").To(w.handleUser))
 	ws.Route(ws.GET("/html").To(w.handleHtml))
+	ws.Route(ws.GET("/redis").To(w.handleSync))
 	Container.Add(ws)
 
 }
@@ -119,14 +126,14 @@ func (w *Web) handleForm(req *restful.Request, rsp *restful.Response) {
 */
 
 func (w *Web) handleHtml(req *restful.Request, rsp *restful.Response) {
-	t, err := template.ParseFiles(StaicHtml + "hello.html")
+	t, err := template.ParseFiles(w.StaicHtml + "hello.html")
 	if err != nil {
 		log.Fatalf("Template gave: %s", err)
 	}
 	t.Execute(rsp.ResponseWriter, nil)
 }
 func (w *Web) handleUserForm(req *restful.Request, rsp *restful.Response) {
-	t, err := template.ParseFiles(StaicHtml + "user.html")
+	t, err := template.ParseFiles(w.StaicHtml + "user.html")
 	if err != nil {
 		log.Fatalf("Template gave: %s", err)
 	}
@@ -149,7 +156,17 @@ func (w *Web) handleUser(req *restful.Request, rsp *restful.Response) {
 	}
 	p := new(Profile)
 	p.Name = req.QueryParameter("Name")
-	p.Age, err = strconv.Atoi(req.QueryParameter("Age"))
+	p.Age, err = strconv.Atoi(req.QueryParameter("Age")) //字符串转整形
 	fmt.Printf("%T(%[1]v)", id)
 	io.WriteString(rsp, fmt.Sprintf("GET:%T(%[1]v)Name%vAge%v", id, p.Name, p.Age))
+}
+
+/* 用redis发送消息 */
+func (w *Web) handleSync(req *restful.Request, rsp *restful.Response) {
+	a, b, c := "test", 1, true
+	err := w.Sync(a, b, c)
+	if err != nil {
+		glog.Warningln("queuePushSyncData fail", err)
+	}
+	io.WriteString(rsp, "redis")
 }

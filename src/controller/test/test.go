@@ -4,7 +4,7 @@ import (
 	"html/template"
 
 	"github.com/emicklei/go-restful"
-	"github.com/golang/glog"
+	//	"github.com/golang/glog"
 	//"encoding/json"
 	"fmt"
 	"io"
@@ -166,7 +166,9 @@ func (w *Web) handleSync(req *restful.Request, rsp *restful.Response) {
 	a, b, c := "test", 1, true
 	err := w.Sync(a, b, c)
 	if err != nil {
-		glog.Warningln("queuePushSyncData fail", err)
+		io.WriteString(rsp, fmt.Sprintf("redis error: %v", err))
+	} else {
+		io.WriteString(rsp, "redis")
 	}
-	io.WriteString(rsp, "redis")
+
 }

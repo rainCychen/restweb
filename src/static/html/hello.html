@@ -13,8 +13,12 @@
 			url:"http://localhost:8080/v1",
 			type:"GET",
 			success:function(data){
-				alert(data)
-				console.log(typeof data)
+				
+				//var obj = eval('('+data+')')
+				var obj = data.parseJSON(); //由JSON字符串转换为JSON对象
+				//var obj = JSON.parse(data); //由JSON字符串转换为JSON对象
+				alert(obj.Name)
+				console.log(typeof data,data)
 			}
 		})
 	};

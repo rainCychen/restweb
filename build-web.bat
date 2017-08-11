@@ -2,7 +2,7 @@
 set KPK_PATH=%~dp0
 set CURPATH=%cd%
 ::echo %CURPATH%
-set GOPATH=%KPK_PATH%../dev/go-pkg;%KPK_PATH%
+set GOPATH=%GOPATH%;%KPK_PATH%
 set GOBIN=%KPK_PATH%/bin
 ::echo %GOPATH%
 

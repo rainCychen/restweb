@@ -49,6 +49,8 @@ func (p *ProductResource) postOne(req *restful.Request, resp *restful.Response) 
 	}
 	log.Println("updating product with id:" + updatedProduct.Id)
 }
+
+//测试 test
 func (p *ProductResource) handleHello(req *restful.Request, resp *restful.Response) {
 	fmt.Println("1111")
 	io.WriteString(resp, "hello")

@@ -1,6 +1,7 @@
 package test
 
 import (
+	"encoding/json"
 	"html/template"
 
 	"github.com/emicklei/go-restful"
@@ -67,8 +68,10 @@ func (w *Web) handleTest(req *restful.Request, rsp *restful.Response) {
 	//glog.Infof("dafdsfa%v\n", info)
 	fmt.Printf("%v\n", info)
 	m := make(map[string]interface{})
-	m["list"] = info
-	io.WriteString(rsp, "小明")
+	m["list"] = info.Name
+	//	io.WriteString(rsp, info.Msg)
+	byte, _ := json.Marshal(info)
+	io.WriteString(rsp, string(byte))
 }
 
 /*

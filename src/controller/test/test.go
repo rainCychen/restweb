@@ -102,7 +102,7 @@ func (w *Web) handleLogin(req *restful.Request, rsp *restful.Response) {
 		rsp.WriteErrorString(http.StatusBadRequest, err.Error())
 		return
 	}
-	io.WriteString(rsp.ResponseWriter, fmt.Sprintf("<html><body>Name=%s, Age=%d</body></html>", p.Name, p.Age))
+	io.WriteString(rsp, fmt.Sprintf("<html><body>Name=%s, Age=%d</body></html>", p.Name, p.Age))
 }
 
 /*
@@ -133,14 +133,14 @@ func (w *Web) handleHtml(req *restful.Request, rsp *restful.Response) {
 	if err != nil {
 		log.Fatalf("Template gave: %s", err)
 	}
-	t.Execute(rsp.ResponseWriter, nil)
+	t.Execute(rsp, nil)
 }
 func (w *Web) handleUserForm(req *restful.Request, rsp *restful.Response) {
 	t, err := template.ParseFiles(w.StaicHtml + "user.html")
 	if err != nil {
 		log.Fatalf("Template gave: %s", err)
 	}
-	t.Execute(rsp.ResponseWriter, nil)
+	t.Execute(rsp, nil)
 }
 
 /*
